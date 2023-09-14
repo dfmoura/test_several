@@ -1,27 +1,22 @@
 /*dia da samana */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
 
 int main() {
     setlocale(LC_ALL, "pt_PT.UTF-8");
-
     int dia, mes, ano, dSemana;
     const char ESC = 27;
-
     do {
         printf("Digite a data na forma dd mm aaaa: ");
         scanf("%d%d%d", &dia, &mes, &ano);
-
-        if (mes < 3) {
+        if (mes < 3) 
             ano--;
-            mes += 12;
-        }
-
-        dSemana = (dia + 2 * mes + (3 * (mes + 1)) / 5 + ano + (ano / 4) - (ano / 100) + (ano / 400)) % 7;
-
-        switch (dSemana+1) {
+        else
+            dSemana -= (int)(0.4*mes+2.3); 
+        dSemana += (int)(ano/4) - (int)((ano/100 + 1)*0.75);
+        dSemana %=7;
+        switch (dSemana) {
             case 0:
                 printf("Domingo");
                 break;
@@ -44,10 +39,8 @@ int main() {
                 printf("Sábado");
                 break;
         }
-
         printf("\nESC para terminar ou ENTER para recomeçar\n");
-        getchar();
-
+        printf("\n");
     } while (getchar() != ESC);
 
     printf("\n");
