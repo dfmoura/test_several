@@ -1,7 +1,6 @@
 
 
 <h1>
-
      <img align="center" alt="Logo Diogo Moura" width="18px" src="https://github.com/dfmoura/test_several/blob/main/kotlin/lightning.png"></a>
     <span>Diogo Moura</span>
 </h1>
