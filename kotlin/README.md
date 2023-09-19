@@ -7,7 +7,8 @@
 
 <br>
 <p align="justify">My big goal is programming.
-I made a turnaround in my career, I study information systems at UNIUBE. My first contact with the programming area was in September 2022, in which my first "hello world" was with c++. Since then, every day is programming day. I currently work in an agroindustry in the organomineral fertilizer sector (@vigorfert) and my duties stand out with analysis in an oracle database, with parameterization, creation of queries, procedures, triggers and development in JAVA.. 
+I made a turnaround in my career and started to study information systems at UNIUBE. My first contact with the programming area was in September 2022 in the <a href="https://github.com/uberhub">@uberhub</a> initiative, in which my first "hello world" was with c++. Since then, every day is programming day. I currently work in an agroindustry in the organomineral fertilizer sector <a href="https://www.vigorfert.com/">@vigorfert</a>
+(@vigorfert) and my duties stand out with analysis in an oracle database, with parameterization, creation of queries, procedures, triggers and development in JAVA.. 
 <br>
  </p>
 
