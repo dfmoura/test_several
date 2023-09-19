@@ -2,7 +2,7 @@
 
 <h1>
 
-     <img align="center" alt="Logo Elidiana Andrade" width="36px" src="https://www.flaticon.com/free-icon/lightning_6577227"></a>
+     <img align="center" alt="Logo Diogo Moura" width="18px" src="https://github.com/dfmoura/test_several/blob/main/kotlin/lightning.png"></a>
     <span>Diogo Moura</span>
 </h1>
 
