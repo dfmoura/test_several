@@ -5,6 +5,12 @@
     <span>Diogo Moura</span>
 </h1>
 
+<br>
+<p align="justify">My big goal is programming.
+I made a turnaround in my career, I study information systems at UNIUBE. My first contact with the programming area was in September 2022, in which my first "hello world" was with c++. Since then, every day is programming day. I currently work in an agroindustry in the organomineral fertilizer sector (@vigorfert) and my duties stand out with analysis in an oracle database, with parameterization, creation of queries, procedures, triggers and development in JAVA.. 
+<br>
+ </p>
+
 
 <h3 align="left">GitHub Stats</h3>
 
