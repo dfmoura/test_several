@@ -21,4 +21,4 @@ I made a turnaround in my career and started to study information systems at UNI
 
 <h3 align="left">Connect with me</h3>
 
-[![LinkedIn](https://img.shields.io/badge/-LinkedIn-000?style=for-the-badge&logo=linkedin&logoColor=FF00F6&color:FFF)](https://www.linkedin.com/in/diogo-moura-16559611/)
+[![LinkedIn](https://img.shields.io/badge/-LinkedIn-000?style=for-the-badge&logo=linkedin&logoColor=FF00F6&color:FFF)](https://www.linkedin.com/in/diogo-moura-16559611/)ki
