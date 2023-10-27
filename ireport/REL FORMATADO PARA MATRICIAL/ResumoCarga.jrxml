@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ResumoCarga" language="groovy" pageWidth="612" pageHeight="737" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="274"/>
+	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.export.text.character.width" value="6.55"/>
+	<property name="net.sf.jasperreports.export.text.character.height" value="11.9"/>
+	<parameter name="PK_ORDEMCARGA" class="java.math.BigDecimal" isForPrompting="false"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="JDBC_CONNECTION" class="java.sql.Connection" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="NUNOTA" class="java.math.BigDecimal">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT LTRIM(RTRIM((SELECT E.RAZAOSOCIALCOMPLETA FROM TSIEMP E WHERE E.CODEMP=ORD.CODEMP))) AS RAZAOSOCIAL_EMP,
+ORD.ORDEMCARGA,
+ORD.CODPARCTRANSP,
+LTRIM(RTRIM((SELECT P.RAZAOSOCIAL FROM TGFPAR P WHERE P.CODPARC=ORD.CODPARCTRANSP))) AS RAZAOSOCIAL_TRANP,
+LTRIM(RTRIM((SELECT P.RAZAOSOCIAL FROM TGFPAR P WHERE P.CODPARC=ORD.CODPARCMOTORISTA))) AS NOME_MOTORISTA,
+LTRIM(RTRIM((SELECT P.CGC_CPF FROM TGFPAR P WHERE P.CODPARC=ORD.CODPARCMOTORISTA))) AS CPF_MOTORISTA,
+LTRIM(RTRIM(CIDV.NOMECID)) AS CIDADE_VEICULO,
+LTRIM(RTRIM(UFV.UF)) AS UF_VEICULO,
+(SELECT P.TELEFONE FROM TGFPAR P WHERE P.CODPARC=ORD.CODPARCTRANSP) AS TELEFONE_TRANP,
+(SELECT P.FAX FROM TGFPAR P WHERE P.CODPARC=ORD.CODPARCTRANSP) AS FAX_TRANP,
+(SELECT P.IDENTINSCESTAD FROM TGFPAR P WHERE P.CODPARC=ORD.CODPARCMOTORISTA) AS IDENTIFICACAO,
+VEI.PLACA,
+LTRIM(RTRIM(CIDE.NOMECID)) AS "CIDADE_EMPRESA",
+ORD.AD_PESO,
+ORD.VLRFRETE,
+ORD.AD_ICMSFRETE,
+(SELECT COUNT(CAB.NUNOTA)
+FROM TGFCAB CAB
+WHERE CAB.TIPMOV IN ('P','T')
+AND cab.CODEMP=ORD.CODEMP
+ and cab.ordemcarga=ord.ordemcarga) as NUMPEDIDO,
+
+(SELECT SUM(CAB.VLRNOTA)
+FROM TGFCAB CAB
+WHERE CAB.TIPMOV IN ('P','T')
+AND cab.CODEMP=ORD.CODEMP
+
+ and cab.ordemcarga=ord.ordemcarga) as VLRTOTORD,
+
+(SELECT SUM(P.PESOBRUTO*I.QTDNEG)
+FROM TGFCAB C,TGFITE I,TGFPRO P
+WHERE C.ORDEMCARGA=ORD.ORDEMCARGA
+AND C.CODEMP=ORD.CODEMP
+AND C.NUNOTA=I.NUNOTA
+AND C.TIPMOV IN ('P','T')
+AND I.SEQUENCIA>0
+AND I.CODPROD=P.CODPROD) AS PESOBRUTOORD
+
+
+
+FROM TGFORD ORD INNER JOIN TGFVEI VEI ON (ORD.CODVEICULO=VEI.CODVEICULO)
+                INNER JOIN TSIEMP EMP ON (EMP.CODEMP=ORD.CODEMP)
+                INNER JOIN TSICID CIDE ON (CIDE.CODCID=EMP.CODCID)
+                INNER JOIN TSICID CIDV ON (CIDV.CODCID=VEI.CODCID)
+                INNER JOIN TSIUFS UFV ON (CIDV.UF=UFV.CODUF)
+WHERE ORD.ORDEMCARGA IN (SELECT C.ORDEMCARGA FROM TGFCAB C WHERE C.NUNOTA = $P{NUNOTA})
+AND ORD.CODEMP IN (SELECT C.CODEMP FROM TGFCAB C WHERE C.NUNOTA = $P{NUNOTA})]]>
+	</queryString>
+	<field name="RAZAOSOCIAL_EMP" class="java.lang.String"/>
+	<field name="ORDEMCARGA" class="java.math.BigDecimal"/>
+	<field name="CODPARCTRANSP" class="java.math.BigDecimal"/>
+	<field name="RAZAOSOCIAL_TRANP" class="java.lang.String"/>
+	<field name="NOME_MOTORISTA" class="java.lang.String"/>
+	<field name="CPF_MOTORISTA" class="java.lang.String"/>
+	<field name="CIDADE_VEICULO" class="java.lang.String"/>
+	<field name="UF_VEICULO" class="java.lang.String"/>
+	<field name="TELEFONE_TRANP" class="java.lang.String"/>
+	<field name="FAX_TRANP" class="java.lang.String"/>
+	<field name="IDENTIFICACAO" class="java.lang.String"/>
+	<field name="PLACA" class="java.lang.String"/>
+	<field name="CIDADE_EMPRESA" class="java.lang.String"/>
+	<field name="AD_PESO" class="java.math.BigDecimal"/>
+	<field name="VLRFRETE" class="java.math.BigDecimal"/>
+	<field name="AD_ICMSFRETE" class="java.math.BigDecimal"/>
+	<field name="NUMPEDIDO" class="java.math.BigDecimal"/>
+	<field name="VLRTOTORD" class="java.lang.Double"/>
+	<field name="PESOBRUTOORD" class="java.lang.Double"/>
+	<pageHeader>
+		<band height="34">
+			<staticText>
+				<reportElement x="156" y="19" width="233" height="14"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[RESUMO DE CARGA]]></text>
+			</staticText>
+			<textField pattern="HH:mm:ss">
+				<reportElement x="487" y="19" width="71" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="416" y="19" width="71" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="3" y="32" width="555" height="1"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="49">
+			<staticText>
+				<reportElement x="195" y="2" width="69" height="15"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Qtd de Notas:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="416" y="2" width="63" height="15"/>
+				<box leftPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Vr. Total:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="416" y="17" width="63" height="15"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Peso Carga:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="3" y="47" width="555" height="1"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="3" y="2" width="60" height="15"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Cod.Carga:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="17" width="60" height="15"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Fret. Client:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="32" width="60" height="15"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Icms Frete:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="64" y="2" width="103" height="15"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{ORDEMCARGA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.0" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="64" y="17" width="103" height="15"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{VLRFRETE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="479" y="17" width="101" height="15"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.DecimalFormat("#,##0.00").format($F{PESOBRUTOORD})]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.0" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="64" y="32" width="103" height="15"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{AD_ICMSFRETE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="264" y="2" width="101" height="15"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{NUMPEDIDO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="479" y="2" width="101" height="15"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[new java.text.DecimalFormat("#,##0.00").format($F{VLRTOTORD})]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="654" splitType="Stretch">
+			<subreport>
+				<reportElement key="ITENS_CARGA3" x="1" y="0" width="580" height="30"/>
+				<subreportParameter name="NUNOTA">
+					<subreportParameterExpression><![CDATA[$P{NUNOTA}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="PK_ORDEMCARGA">
+					<subreportParameterExpression><![CDATA[$P{PK_ORDEMCARGA}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "ITENS_CARGA3.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="49">
+			<subreport>
+				<reportElement key="ITENS_CARGA2" x="0" y="0" width="572" height="45"/>
+				<subreportParameter name="NUNOTA">
+					<subreportParameterExpression><![CDATA[$P{NUNOTA}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="PK_ORDEMCARGA">
+					<subreportParameterExpression><![CDATA[$P{PK_ORDEMCARGA}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "ITENS_CARGA2.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<summary>
+		<band height="94">
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="454" y="1" width="103" height="16"/>
+				<box leftPadding="2"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TELEFONE_TRANP}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="63" width="58" height="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[__/__/__]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="58" y="77" width="129" height="1"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="371" y="77" width="58" height="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Data]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="389" y="1" width="65" height="16"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Nr.Fone:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="72" y="17" width="317" height="16"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NOME_MOTORISTA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="59" y="33" width="97" height="16"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{PLACA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="187" y="77" width="58" height="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Data]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="371" y="49" width="186" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Liberação]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="244" y="77" width="128" height="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Visto]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="245" y="77" width="126" height="1"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="428" y="77" width="129" height="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Visto]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="1" y="1" width="80" height="16"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Transportadora:"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="187" y="50" width="185" height="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Faturamento]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="213" y="33" width="154" height="16"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CIDADE_VEICULO}+"/"+$F{UF_VEICULO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="77" width="58" height="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Data]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="454" y="17" width="103" height="16"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CPF_MOTORISTA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="371" y="63" width="58" height="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[__/__/__]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="389" y="17" width="65" height="16"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["CGC-CPF:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="1" y="17" width="70" height="16"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Motorista:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="454" y="33" width="103" height="16"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{IDENTIFICACAO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="187" y="63" width="58" height="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[__/__/__]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="82" y="1" width="307" height="16"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CODPARCTRANSP}.toString()+" - "+$F{RAZAOSOCIAL_TRANP}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="50" width="188" height="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Balanca]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="0" y="49" width="557" height="1"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="429" y="76" width="128" height="1"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="58" y="77" width="130" height="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Visto]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="1" y="33" width="57" height="16"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Nr.Placa:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="156" y="33" width="57" height="16"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Cidade/UF:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="389" y="33" width="65" height="16"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Identidade:"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" x="188" y="50" width="1" height="41"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="Float" x="372" y="49" width="1" height="41"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+		</band>
+	</summary>
+</jasperReport>
