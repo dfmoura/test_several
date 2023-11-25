@@ -1,7 +1,7 @@
 FROM python:3.8-slim
 WORKDIR /app
 COPY main.py .
-RUN pip install pandas
+#RUN pip install pandas
 CMD ["python", "main.py"]
 
 
