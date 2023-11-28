@@ -35,7 +35,38 @@ console.log(link.getAttribute("href"));
 
 console.log(link.hasAttribute("target"));
 
-console.removeAttribute("target"); 
+link.removeAttribute("target"); 
 
 //2:30////
 //Manipulacao de classes do CSS
+const elemento = document.querySelector("#meuId");
+
+element.classList.add("novaClasse");
+
+element.classList.remove("minhaClasse");
+
+element.classList.toggle("outraClasse");
+
+element.classList.toggle("outraClasse");
+
+
+// Manipular o CSS
+
+const elemento3 = document.querySelector("#meuId")
+
+elemento3.style.color = "blue";
+elemento3.style.backgroundColor = "red";
+
+// background-color => backgroundColor
+
+// Navegação entre nós (navegar entre elementos)
+const element4 = document.querySelector("#meuInput");
+
+const pai = element4.parentNode;
+
+console.log(pai);
+
+// Obter o primeiro filho
+const primeiroFilho = pai.firstChild;
+
+console.log(primeiroFilho);

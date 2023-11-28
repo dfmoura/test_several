@@ -1,6 +1,0 @@
-docker build -t main .
-
-
-docker run main
-
-docker run -it main
