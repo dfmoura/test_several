@@ -6,6 +6,27 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["C:\\Users\\diogo\\OneDrive\\Documentos\\GitHub\\test_several\\ireport\\Gestao_Documentos\\"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="P_CODUF" class="java.math.BigDecimal">
+		<property name="PESQUISA" value="TRUE"/>
+		<property name="Type" value="D"/>
+		<property name="nomeTabela" value="TSIUFS"/>
+		<parameterDescription><![CDATA[Cód. UF]]></parameterDescription>
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NUTIPDOCS" class="java.math.BigDecimal">
+		<property name="nomeTabela" value="AD_TIPDOCS"/>
+		<property name="PESQUISA" value="TRUE"/>
+		<property name="Type" value="D"/>
+		<parameterDescription><![CDATA[Cód. Tp. Doc.]]></parameterDescription>
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CODCID" class="java.math.BigDecimal">
+		<property name="nomeTabela" value="TSICID"/>
+		<property name="PESQUISA" value="TRUE"/>
+		<property name="Type" value="D"/>
+		<parameterDescription><![CDATA[Cód. Cid.]]></parameterDescription>
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT SYSDATE AS DATA FROM DUAL]]>
 	</queryString>

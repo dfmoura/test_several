@@ -5,6 +5,27 @@
 	<property name="ireport.y" value="0"/>
 	<property name="ireport.definition"/>
 	<style name="style1" mode="Opaque" fill="Solid"/>
+	<parameter name="P_CODUF" class="java.math.BigDecimal">
+		<property name="PESQUISA" value="TRUE"/>
+		<property name="Type" value="D"/>
+		<property name="nomeTabela" value="TSIUFS"/>
+		<parameterDescription><![CDATA[Cód. UF]]></parameterDescription>
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NUTIPDOCS" class="java.math.BigDecimal">
+		<property name="nomeTabela" value="AD_TIPDOCS"/>
+		<property name="PESQUISA" value="TRUE"/>
+		<property name="Type" value="D"/>
+		<parameterDescription><![CDATA[Cód. Tp. Doc.]]></parameterDescription>
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CODCID" class="java.math.BigDecimal">
+		<property name="nomeTabela" value="TSICID"/>
+		<property name="PESQUISA" value="TRUE"/>
+		<property name="Type" value="D"/>
+		<parameterDescription><![CDATA[Cód. Cid.]]></parameterDescription>
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[/*BASE GESTAO DOCUMENTOS - POSICAO 3
 Deverá conter Documentos com Status Pendentes, Indeferido e Suspenso
@@ -35,7 +56,10 @@ INNER JOIN AD_TIPDOCS TIP ON CUM.NUTIPDOCS = TIP.NUTIPDOCS
 INNER JOIN TSICID CID ON DOC.CODCID = CID.CODCID
 INNER JOIN DES ON REC.STATUS = DES.VALOR
 WHERE
-(REC.STATUS IN ('N','P','S'))
+((CID.UF = $P{P_CODUF} OR $P{P_CODUF} IS NULL)
+AND (CUM.NUTIPDOCS = $P{P_NUTIPDOCS} OR $P{P_NUTIPDOCS} IS NULL)
+AND (DOC.CODCID = $P{P_CODCID} OR $P{P_CODCID} IS NULL))
+AND (REC.STATUS IN ('N','P','S'))
 GROUP BY
 DOC.CODCID,
 CID.NOMECID,

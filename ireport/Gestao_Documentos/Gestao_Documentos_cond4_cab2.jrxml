@@ -8,6 +8,27 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["C:\\Users\\diogo\\OneDrive\\Documentos\\GitHub\\test_several\\ireport\\Gestao_Documentos\\"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="P_CODUF" class="java.math.BigDecimal">
+		<property name="PESQUISA" value="TRUE"/>
+		<property name="Type" value="D"/>
+		<property name="nomeTabela" value="TSIUFS"/>
+		<parameterDescription><![CDATA[Cód. UF]]></parameterDescription>
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NUTIPDOCS" class="java.math.BigDecimal">
+		<property name="nomeTabela" value="AD_TIPDOCS"/>
+		<property name="PESQUISA" value="TRUE"/>
+		<property name="Type" value="D"/>
+		<parameterDescription><![CDATA[Cód. Tp. Doc.]]></parameterDescription>
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_CODCID" class="java.math.BigDecimal">
+		<property name="nomeTabela" value="TSICID"/>
+		<property name="PESQUISA" value="TRUE"/>
+		<property name="Type" value="D"/>
+		<parameterDescription><![CDATA[Cód. Cid.]]></parameterDescription>
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[/*BASE GESTAO DOCUMENTOS - POSICAO 4
 Empresas 100% regularizadas ( Unidades que possuem todos seus documentos em
@@ -58,7 +79,10 @@ FROM (
   INNER JOIN TSICID CID ON DOC.CODCID = CID.CODCID
   INNER JOIN DES ON REC.STATUS = DES.VALOR
  WHERE
-(REC.STATUS IN ('E','C','I','D','S'))
+      (REC.STATUS IN ('E', 'C', 'I', 'D', 'S'))
+      AND (CID.UF = $P{P_CODUF} OR $P{P_CODUF} IS NULL)
+      AND (CUM.NUTIPDOCS = $P{P_NUTIPDOCS} OR $P{P_NUTIPDOCS} IS NULL)
+      AND (DOC.CODCID = $P{P_CODCID} OR $P{P_CODCID} IS NULL)
   GROUP BY
     DOC.CODCID,
     CID.NOMECID,
@@ -273,7 +297,7 @@ ORDER BY 1]]>
 			<textField>
 				<reportElement x="0" y="0" width="16" height="15"/>
 				<textElement>
-					<font size="7"/>
+					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{NUTIPDOCS}]]></textFieldExpression>
 			</textField>
@@ -357,7 +381,7 @@ ORDER BY 1]]>
 			<textField>
 				<reportElement x="16" y="0" width="100" height="15"/>
 				<textElement>
-					<font size="7"/>
+					<font size="6"/>
 				</textElement>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{DOCUMENTO}]]></textFieldExpression>
 			</textField>
