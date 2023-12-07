@@ -1,236 +1,43 @@
-# Projeto Oracle SQL - Gestão de Documentos
+# Objetivos
+O objetivo principal é desenvolver um dashboard dedicado à análise de vendas.
 
-Este projeto em Oracle SQL visa fornecer informações sobre a situação dos documentos em uma base de gestão de documentos. Os principais aspectos abordados incluem documentos vencidos, documentos vigentes e empresas 100% regularizadas, considerando diferentes estados de documentos.
+## História do Processo
+O processo de desenvolvimento do dashboard para análise de vendas é delineado da seguinte maneira:
 
-## Documentos Vencidos
+## Solução Proposta
+A proposta consiste em criar um dashboard que integre diversas análises de vendas, com os seguintes componentes:
 
-### Posição 1
+### 1. Filtros
+1.1. Diversos filtros serão implementados conforme a necessidade do cliente, inicialmente incluindo:
+   - Período de Negociação
+   - Cliente
+   - TOP de Venda (seleção múltipla)
 
-Os documentos vencidos são aqueles com a data de validade expirada. Isso inclui documentos com status 'Deferido' ou documentos cuja data de validade tenha expirado.
+### 2. Nível Principal do Dashboard
+#### 2.1. Painel Superior
+   - Gráfico de colunas por período (mês)
+     - Para cada mês, serão geradas 3 colunas, representando:
+       - Qtd. Notas Aprovadas
+       - Qtd. Notas Recebidas (baixadas)
+       - Qtd. Notas Em Aberto
+     - Clicar nas colunas atualizará o painel inferior do dashboard.
 
-```sql
-/*BASE GESTAO DOCUMENTOS - POSICAO 1*/
+#### 2.2. Painel Inferior
+   - Gráfico de pizza com as formas de pagamento:
+     - O resultado varia conforme a coluna e mês que o usuário clicou, apresentando as formas de pagamento das colunas de "Notas Aprovadas", "Notas Recebidas" e "Notas Aberto."
+   - Gráfico de pizza de recebimento por quantidade:
+     - O resultado varia conforme o mês da coluna selecionada, mostrando a quantidade de notas baixadas durante o período.
+   - Gráfico de pizza de recebimento por valor:
+     - O resultado varia conforme o mês da coluna selecionada, exibindo o valor total recebido (baixado) durante o período.
+   - Clicar nas fatias dos gráficos de pizza levará o usuário ao segundo nível de auditoria, que apresenta todas as notas e todos os financeiros associados ao valor exibido pela fatia.
 
--- Seleciona documentos vencidos
-WITH DES AS (
-  SELECT OPC.VALOR, OPC.OPCAO
-  FROM tddcam CAM
-  INNER JOIN TDDOPC OPC ON CAM.NUCAMPO = OPC.NUCAMPO
-  WHERE CAM.NOMETAB = 'AD_GESTAODOCUM' AND CAM.NOMECAMPO = 'STATUS'
-)
+### 3. Segundo Nível do Dashboard
+#### 3.1. Painel Superior
+   - Tabela de notas
+     - Apresenta as notas em detalhe
+     - Duplo clique abre a nota na tela "Central de Vendas"
 
-SELECT DISTINCT
-  DOC.CODCID,
-  CID.NOMECID,
-  DOC.CODEMP,
-  DOC.EMPRESA,
-  CUM.NUTIPDOCS,
-  TIP.DOCUMENTO,
-  CASE WHEN REC.DTVALIDADE < SYSDATE THEN 'VENCIDO' ELSE NULL END AS DTVALIDADE1,
-  MAX(REC.DTVALIDADE) AS DTVALIDADE,
-  REC.STATUS,
-  DES.OPCAO
-FROM AD_GESTAODOC DOC
-INNER JOIN AD_GESTAODOCUM CUM ON DOC.CODIGO = CUM.CODIGO
-INNER JOIN AD_GESTAODOCUMREC REC ON CUM.CODIGO = REC.CODIGO AND CUM.NUMDOC = REC.NUMDOC
-INNER JOIN AD_TIPDOCS TIP ON CUM.NUTIPDOCS = TIP.NUTIPDOCS
-INNER JOIN TSICID CID ON DOC.CODCID = CID.CODCID
-INNER JOIN DES ON REC.STATUS = DES.VALOR
-WHERE
-  (
-    (SELECT MAX(REC.DTVALIDADE) FROM AD_GESTAODOCUMREC REC WHERE STATUS = 'E' AND CUM.CODIGO = REC.CODIGO AND CUM.NUMDOC = REC.NUMDOC) < SYSDATE AND REC.STATUS = 'E'
-  )
-  OR (SELECT MAX(REC.DTVALIDADE) FROM AD_GESTAODOCUMREC REC WHERE CUM.CODIGO = REC.CODIGO AND CUM.NUMDOC = REC.NUMDOC) < SYSDATE
-GROUP BY
-  DOC.CODCID,
-  CID.NOMECID,
-  DOC.CODEMP,
-  DOC.EMPRESA,
-  CUM.NUTIPDOCS,
-  TIP.DOCUMENTO,
-  CASE WHEN REC.DTVALIDADE < SYSDATE THEN 'VENCIDO' ELSE NULL END,
-  REC.STATUS,
-  DES.OPCAO
-ORDER BY 1,3,4;
-```
-
-## Documentos Vigentes
-
-### Posição 2
-
-Os documentos vigentes são aqueles com status 'Concluído', 'Indeterminado', 'Dispensado' ou 'Deferido' e com data de validade não expirada.
-
-```sql
-/*BASE GESTAO DOCUMENTOS - POSICAO 2*/
-
--- Seleciona documentos vigentes
-WITH DES AS (
-  SELECT OPC.VALOR, OPC.OPCAO
-  FROM tddcam CAM
-  INNER JOIN TDDOPC OPC ON CAM.NUCAMPO = OPC.NUCAMPO
-  WHERE CAM.NOMETAB = 'AD_GESTAODOCUM' AND CAM.NOMECAMPO = 'STATUS'
-)
-
-SELECT
-  NUTIPDOCS,
-  DOCUMENTO,
-  SUM(A) AS A_AGUARDANDO, 
-  SUM(C) AS C_ConcluIdo,
-  SUM(D) AS D_Dispensado, 
-  SUM(E) AS E_Deferido,
-  SUM(G) AS G_Vigente, 
-  SUM(I) AS I_INDETERMINADO,
-  SUM(N) AS N_INDEFERIDO, 
-  SUM(P) AS P_PENDENTE, 
-  SUM(S) AS S_SUSPENSO, 
-  SUM(V) AS V_VENCIDO,
-  (SUM(A) + SUM(C) + SUM(D) + SUM(E) + SUM(G) + SUM(I) + SUM(N) + SUM(P) + SUM(S) + SUM(V)) AS TOTAL
-FROM (
-  SELECT *
-  FROM (
-    WITH DES AS (
-      SELECT OPC.VALOR, OPC.OPCAO
-      FROM tddcam CAM
-      INNER JOIN TDDOPC OPC ON CAM.NUCAMPO = OPC.NUCAMPO
-      WHERE CAM.NOMETAB = 'AD_GESTAODOCUM' AND CAM.NOMECAMPO = 'STATUS'
-    )
-    SELECT DISTINCT
-      DOC.CODCID,
-      CID.NOMECID,
-      DOC.CODEMP,
-      DOC.EMPRESA,
-      CUM.NUTIPDOCS,
-      TIP.DOCUMENTO,
-      CASE WHEN REC.DTVALIDADE < SYSDATE THEN 'VENCIDO' ELSE NULL END AS DTVALIDADE1,
-      MAX(REC.DTVALIDADE) AS DTVALIDADE,
-      REC.STATUS,
-      DES.OPCAO
-    FROM AD_GESTAODOC DOC
-    INNER JOIN AD_GESTAODOCUM CUM ON DOC.CODIGO = CUM.CODIGO
-    INNER JOIN AD_GESTAODOCUMREC REC ON CUM.CODIGO = REC.CODIGO AND CUM.NUMDOC = REC.NUMDOC
-    INNER JOIN AD_TIPDOCS TIP ON CUM.NUTIPDOCS = TIP.NUTIPDOCS
-    INNER JOIN TSICID CID ON DOC.CODCID = CID.CODCID
-    INNER JOIN DES ON REC.STATUS = DES.VALOR
-    WHERE
-      (REC.DTVALIDADE > SYSDATE AND REC.STATUS ='E')
-      OR (
-        REC.STATUS IN ('C','D','I')
-      )
-    GROUP BY
-      DOC.CODCID,
-      CID.NOMECID,
-      DOC.CODEMP,
-      DOC.EMPRESA,
-      CUM.NUTIPDOCS,
-      TIP.DOCUMENTO,
-      CASE WHEN REC.DTVALIDADE < SYSDATE THEN 'VENCIDO' ELSE NULL END,
-      REC.STATUS,
-      DES.OPCAO
-  )
-  PIVOT (
-    COUNT(OPCAO) FOR STATUS IN ('A' AS A,'E' AS E,'C' AS C,'D' AS D, 'G' AS G, 'I' AS I, 'N' AS N, 'P' AS P, 'S' AS S, 'V' AS V)
-  )
-)
-GROUP BY NUTIPDOCS, DOCUMENTO
-ORDER BY 1;
-```
-
-## Documentos com Status Pendentes, Indeferido e Suspenso
-
-### Posição 3
-
-Essa parte do projeto concentra-se em documentos com status 'Pendente', 'Indeferido' e 'Suspenso'.
-
-```sql
-/*BASE GESTAO DOCUMENTOS - POSICAO 3*/
-
---
-
- Seleciona documentos com status Pendentes, Indeferido e Suspenso
-WITH DES AS (
-  SELECT OPC.VALOR, OPC.OPCAO
-  FROM tddcam CAM
-  INNER JOIN TDDOPC OPC ON CAM.NUCAMPO = OPC.NUCAMPO
-  WHERE CAM.NOMETAB = 'AD_GESTAODOCUM' AND CAM.NOMECAMPO = 'STATUS'
-)
-
-SELECT DISTINCT
-  DOC.CODCID,
-  CID.NOMECID,
-  DOC.CODEMP,
-  DOC.EMPRESA,
-  CUM.NUTIPDOCS,
-  TIP.DOCUMENTO,
-  MAX(REC.DTVALIDADE) AS DTVALIDADE,
-  REC.STATUS,
-  DES.OPCAO
-FROM AD_GESTAODOC DOC
-INNER JOIN AD_GESTAODOCUM CUM ON DOC.CODIGO = CUM.CODIGO
-INNER JOIN AD_GESTAODOCUMREC REC ON CUM.CODIGO = REC.CODIGO AND CUM.NUMDOC = REC.NUMDOC
-INNER JOIN AD_TIPDOCS TIP ON CUM.NUTIPDOCS = TIP.NUTIPDOCS
-INNER JOIN TSICID CID ON DOC.CODCID = CID.CODCID
-INNER JOIN DES ON REC.STATUS = DES.VALOR
-WHERE
-  (REC.STATUS IN ('N','P','S'))
-GROUP BY
-  DOC.CODCID,
-  CID.NOMECID,
-  DOC.CODEMP,
-  DOC.EMPRESA,
-  CUM.NUTIPDOCS,
-  TIP.DOCUMENTO,
-  REC.STATUS,
-  DES.OPCAO
-ORDER BY 1,3,5,8;
-```
-
-## Empresas 100% Regularizadas
-
-### Posição 4
-
-Nesta parte do projeto, são identificadas empresas 100% regularizadas, ou seja, unidades que possuem todos os seus documentos nos estados 'Deferido', 'Concluído', 'Indeterminado', 'Dispensado' e 'Suspenso'.
-
-```sql
-/*BASE GESTAO DOCUMENTOS - POSICAO 4*/
-
--- Seleciona empresas 100% regularizadas
-WITH DES AS (
-  SELECT OPC.VALOR, OPC.OPCAO
-  FROM tddcam CAM
-  INNER JOIN TDDOPC OPC ON CAM.NUCAMPO = OPC.NUCAMPO
-  WHERE CAM.NOMETAB = 'AD_GESTAODOCUM' AND CAM.NOMECAMPO = 'STATUS'
-)
-
-SELECT DISTINCT
-  DOC.CODCID,
-  CID.NOMECID,
-  DOC.CODEMP,
-  DOC.EMPRESA,
-  CUM.NUTIPDOCS,
-  TIP.DOCUMENTO,
-  MAX(REC.DTVALIDADE) AS DTVALIDADE,
-  REC.STATUS,
-  DES.OPCAO
-FROM AD_GESTAODOC DOC
-INNER JOIN AD_GESTAODOCUM CUM ON DOC.CODIGO = CUM.CODIGO
-INNER JOIN AD_GESTAODOCUMREC REC ON CUM.CODIGO = REC.CODIGO AND CUM.NUMDOC = REC.NUMDOC
-INNER JOIN AD_TIPDOCS TIP ON CUM.NUTIPDOCS = TIP.NUTIPDOCS
-INNER JOIN TSICID CID ON DOC.CODCID = CID.CODCID
-INNER JOIN DES ON REC.STATUS = DES.VALOR
-WHERE
-  (REC.STATUS IN ('E','C','I','D','S'))
-GROUP BY
-  DOC.CODCID,
-  CID.NOMECID,
-  DOC.CODEMP,
-  DOC.EMPRESA,
-  CUM.NUTIPDOCS,
-  TIP.DOCUMENTO,
-  REC.STATUS,
-  DES.OPCAO
-ORDER BY 1,3,5,8;
-```
-
-## Considerações Finais
-
-Este projeto fornece uma visão abrangente sobre a situação dos documentos em uma base de gestão, classificando-os de acordo com diferentes critérios. Certifique-se de adaptar os códigos conforme necessário para atender aos requisitos específicos do seu ambiente.
+#### 3.2. Painel Inferior
+   - Tabela de financeiros
+     - Apresenta os financeiros em detalhe
+     - Duplo clique abre o financeiro na tela "Movimentação Financeira"
