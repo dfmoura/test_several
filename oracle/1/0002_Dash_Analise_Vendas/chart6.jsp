@@ -21,37 +21,54 @@
 
 <body>
     <snk:query var="cliente">
-        SELECT 
-            CAB.CODPARC,
-            SUBSTR(PAR.RAZAOSOCIAL, 1, 6) AS RAZAOSOCIAL,
-            SUM(
-                CASE 
-                    WHEN CAB.TIPMOV = 'D' THEN (ITE.VLRTOT + ITE.VLRIPI + ITE.VLRSUBST - ITE.VLRDESC) * -1 
-                    ELSE (ITE.VLRTOT + ITE.VLRIPI + ITE.VLRSUBST - ITE.VLRDESC) 
-                END
-            ) AS VLRFAT
-        FROM 
-            TGFCAB CAB
-            INNER JOIN TGFITE ITE ON CAB.NUNOTA = ITE.NUNOTA
-            INNER JOIN TGFCUS CUS ON CUS.CODPROD = ITE.CODPROD AND CUS.CODEMP = CAB.CODEMP AND CUS.DTATUAL = (
-                SELECT MAX(DTATUAL) FROM TGFCUS 
-                WHERE DTATUAL <= CAB.DTNEG AND CODPROD = ITE.CODPROD AND CODEMP = CAB.CODEMP
-            )
-            INNER JOIN TGFTOP TOP ON CAB.CODTIPOPER = TOP.CODTIPOPER AND TOP.DHALTER = (
-                SELECT MAX(DHALTER) FROM TGFTOP WHERE CODTIPOPER = CAB.CODTIPOPER
-            )
-            INNER JOIN TGFPRO PRO ON ITE.CODPROD = PRO.CODPROD
-            INNER JOIN TGFPAR PAR ON CAB.CODPARC = PAR.CODPARC
-        WHERE 
-            TOP.GOLSINAL = -1
-            AND (CAB.DTNEG BETWEEN '01-11-2023' AND '03-11-2023')
-            AND TOP.TIPMOV IN ('V', 'D')
-            AND TOP.ATIVO = 'S'
-        GROUP BY 
-            CAB.CODPARC, PAR.RAZAOSOCIAL
-        ORDER BY 
-            VLRFAT DESC
-        FETCH FIRST 5 ROWS ONLY
+        SELECT ANO, MES, MES_ANO, TIPO, QTD
+        FROM (
+            SELECT 
+                TO_CHAR(CAB.DTNEG,'YYYY') AS ANO,
+                TO_CHAR(CAB.DTNEG,'MM') AS MES,
+                TO_CHAR(CAB.DTNEG,'MM/YYYY') AS MES_ANO,
+                'QTD. NOTAS APROVADAS' AS TIPO,
+                COUNT(*) AS QTD
+            FROM TGFCAB CAB
+            WHERE CAB.TIPMOV = 'V' 
+            AND CAB.STATUSNFE = 'A'
+            AND CAB.DTNEG BETWEEN TO_DATE('01-08-2023', 'DD-MM-YYYY') AND TO_DATE('04-12-2023', 'DD-MM-YYYY')
+            GROUP BY 
+                TO_CHAR(CAB.DTNEG,'YYYY'),
+                TO_CHAR(CAB.DTNEG,'MM'),
+                TO_CHAR(CAB.DTNEG,'MM/YYYY')
+            UNION ALL
+            SELECT DISTINCT
+                TO_CHAR(FIN.DTNEG,'YYYY') AS ANO,
+                TO_CHAR(FIN.DTNEG,'MM') AS MES,
+                TO_CHAR(FIN.DTNEG,'MM/YYYY') AS MES_ANO,
+                'QTD. NOTAS RECEBIDAS' AS TIPO,
+                COUNT(*) AS QTD
+            FROM TGFFIN FIN
+            INNER JOIN TGFCAB CAB ON FIN.NUNOTA = CAB.NUNOTA
+            WHERE FIN.DHBAIXA IS NULL
+            AND CAB.DTNEG BETWEEN TO_DATE('01-08-2023', 'DD-MM-YYYY') AND TO_DATE('04-12-2023', 'DD-MM-YYYY')
+            GROUP BY 
+                TO_CHAR(FIN.DTNEG,'YYYY'),
+                TO_CHAR(FIN.DTNEG,'MM'),
+                TO_CHAR(FIN.DTNEG,'MM/YYYY')
+            UNION ALL
+            SELECT DISTINCT
+                TO_CHAR(FIN.DTNEG,'YYYY') AS ANO,
+                TO_CHAR(FIN.DTNEG,'MM') AS MES,
+                TO_CHAR(FIN.DTNEG,'MM/YYYY') AS MES_ANO,
+                'QTD. NOTAS EM ABERTO' AS TIPO,
+                COUNT(*) AS QTD
+            FROM TGFFIN FIN
+            INNER JOIN TGFCAB CAB ON FIN.NUNOTA = CAB.NUNOTA
+            WHERE FIN.DHBAIXA IS NOT NULL
+            AND CAB.DTNEG BETWEEN TO_DATE('01-08-2023', 'DD-MM-YYYY') AND TO_DATE('04-12-2023', 'DD-MM-YYYY')
+            GROUP BY 
+                TO_CHAR(FIN.DTNEG,'YYYY'),
+                TO_CHAR(FIN.DTNEG,'MM'),
+                TO_CHAR(FIN.DTNEG,'MM/YYYY')
+        )
+        ORDER BY ANO, MES
     </snk:query>
 
     <div style="width: 60%;">
@@ -64,8 +81,8 @@
         var data = [];
 
         <c:forEach var="row" items="${cliente.rows}">
-            labels.push("<c:out value="${row.RAZAOSOCIAL}" />");
-            data.push(<c:out value="${row.VLRFAT}" />);
+            labels.push("<c:out value="${row.TIPO}" />");
+            data.push(<c:out value="${row.QTD}" />);
         </c:forEach>
 
         // Create the pie chart
@@ -109,7 +126,7 @@
                 },
                 title: {
                     display: true,
-                    text: 'TOP 5 CLIENTES'
+                    text: 'ANALIZE DE VENDAS'
                 }
             }
         });
