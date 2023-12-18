@@ -7,8 +7,10 @@ Além disso, será implementada uma funcionalidade avançada na tabela 'TSIUSU',
 ```
      
 ### 1. Log's Execução
-#### 4.1. 11/12/2023 09:00 as 11:30
+#### 4.1. 14/12/2023 17:00 as 18:20
 ```markdown
-JB - Regulatorios - Relatório Regulatorio Agendado  - Status Pendente - Andamento em etapa de Criação de procedure para botão de ação atulizar o status do campo 'PENDENTE' para 'N'. (Não concluído)
+JB - Regulatorios - Relatório Regulatorio Agendado  - Foi implementado um campo 'flag', destinado a identificar os usuários aptos a receberem o relatório, o qual está vinculado à tabela 'TSIUSU', por meio do campo 'AD_RECEB_REGULAT'. Além disso, efetuou-se a duplicação do relatório regulatório já existente. Como parte deste processo, procedeu-se com a exclusão dos parâmetros destinados ao filtro do grupo de relatórios que compõem o relatório de regulatório. Além disso, foi estabelecida uma ação agendada, integrando-a ao sistema, a qual realiza uma seleção específica de usuários que possuem a flag ativada para receberem o relatório. 
 ```
+
+
 
