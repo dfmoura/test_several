@@ -36,7 +36,7 @@ JB - Dash Cotação - Botão de ação - Status Pendente - Inclusão na estrutur
 ```markdown
 JB - Dash Cotação - Botão de ação - Status Pendente - Incorporadas à estrutura da procedure,  a inclusão automática das informações do usuário responsável e a data da transação realizada.
 ```
-#### 4.3. 11/12/2023 20:00 as 23:30
+#### 4.3. 12/12/2023 20:00 as 23:30
 ```markdown
 JB - Dash Cotação - Botão de ação - Status Pendente - Andamento em etapa de Criação de procedure para botão de ação atulizar o status do campo 'PENDENTE' para 'N'. (Não concluído)
 ```
