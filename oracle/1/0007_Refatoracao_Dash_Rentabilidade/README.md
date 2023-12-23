@@ -59,4 +59,23 @@ GM - Custo x Rentabilidade - Controle de qualidade - Aprimorei o cálculo do ben
 GM - Custo x Rentabilidade - Controle de qualidade - Desenvolvimento de um componente de tabela de nível secundário, destinado a aprimorar a visualização e análise dos valores brutos e líquidos do ICMS, organizados de forma agrupada conforme o tipo de benefício associado. Este componente visa oferecer uma abordagem mais detalhada e eficiente para a apresentação das informações, proporcionando uma compreensão mais aprofundada dos dados relacionados ao ICMS.
 ```
 
-#### 1.5. 20/12/2023 13:00 as 12:00
+#### 1.5. 20/12/2023 13:00 as 17:20
+```markdown
+GM - Custo x Rentabilidade - Controle de qualidade - Aprimoramento da eficiência por meio da otimização para acelerar as respostas das consultas SELECT. Esta iniciativa visa aperfeiçoar o desempenho e a agilidade na recuperação de dados, proporcionando uma resposta mais rápida e eficaz às consultas SELECT realizadas. A otimização implementada visa maximizar a eficiência operacional, garantindo uma experiência mais fluida e eficaz no processo de recuperação de informações.
+```
+
+#### 1.6. 21/12/2023 07:00 as 12:00
+```markdown
+GM - Custo x Rentabilidade - Desenvolveu-se um nível de resultado estruturado para apresentar de maneira mais eficaz as saídas, levando em consideração o filtro NVL(AD_TIPOCUSTO, 'N') NOT IN ('I', 'F', 'V', 'D'). A implementação deste filtro visa excluir categorias específicas, proporcionando uma análise mais precisa e focalizada.  Adicionalmente, para enriquecer a visualização e compreensão dos resultados, incorporou-se um gráfico de pizza ao lado do nível de resultado. Esse gráfico de pizza destaca de forma vívida e intuitiva o TOP 5 das saídas, proporcionando uma visão rápida e acessível das principais categorias identificadas.  Essa abordagem combina a eficiência analítica do filtro personalizado com a representação visual do gráfico de pizza, elevando a apresentação a um patamar mais robusto e informativo.
+```
+
+#### 1.6. 21/12/2023 13:00 as 17:30
+```markdown
+GM - Custo x Rentabilidade - Além disso, aprimoramos o nível de resultado introduzindo outra funcionalidade, ao realizar um duplo clique no componente da tabela, é possível acessar um detalhamento abrangente das saídas. Por último, introduzimos um elemento adicional de praticidade ao incorporar um link direto no painel de resultados. Esse link conduz os usuários para um novo nível de análise dedicado a oferecer uma visão mais aprofundada das saídas, categorizadas por sua natureza específica. Ao clicar em cada natureza, uma apresentação detalhada é revelada, exibindo a evolução das saídas ao longo dos últimos 12 meses.
+```
+
+
+#### 1.6. 22/12/2023 07:00 as 12:00
+```markdown
+GM - Custo x Rentabilidade - (Andamento) Desenvolvemos uma instrução SELECT, projetada especificamente para extrair os resultados dos últimos 12 meses.
+```
