@@ -79,3 +79,8 @@ GM - Custo x Rentabilidade - Além disso, aprimoramos o nível de resultado intr
 ```markdown
 GM - Custo x Rentabilidade - (Andamento) Desenvolvemos uma instrução SELECT, projetada especificamente para extrair os resultados dos últimos 12 meses.
 ```
+
+#### 1.7. 02/01/2024 08:30 as 12:30
+```markdown
+GM - Custo x Rentabilidade - 1.7) Realizou-se uma minuciosa revisão dos filtros relacionados à 'CODEMP' incorporados no comando SELECT de todos os componentes integrantes do 'DASH DE RENTABILIDADE'. 1.8) Em busca da máxima otimização, identificaram-se e corrigiram-se pontos de redundância no comando SELECT aplicado ao 'DASH DE RENTABILIDADE'.
+```

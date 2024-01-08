@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Acomp_Meta" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="0.6830134553650705"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="PDIR_MODELO" class="java.lang.String" isForPrompting="false">
@@ -64,7 +64,14 @@ MET.DTREF
 , MET.MARCA
 , MET.QTDPREV
 , MET.QTDREAL
-, NVL(PRC.VLRVENDALT,0) AS PRECOLT,  SUM(CASE WHEN CAB.TIPMOV='D' THEN (ITE.VLRTOT-ITE.VLRDESC-ITE.VLRREPRED)*-1 ELSE (ITE.VLRTOT-ITE.VLRDESC-ITE.VLRREPRED) END)  AS VLRREAL
+, NVL(PRC.VLRVENDALT,0) AS PRECOLT,
+SUM(NVL(
+  CASE
+    WHEN CAB.TIPMOV = 'D' THEN (ITE.VLRTOT - ITE.VLRDESC - ITE.VLRREPRED) * -1
+    ELSE (ITE.VLRTOT - ITE.VLRDESC - ITE.VLRREPRED)
+  END,
+  0
+)) AS VLRREAL
 
 FROM TGMMET MET
   LEFT JOIN TGFVEN VEN ON (MET.CODVEND = VEN.CODVEND)
@@ -236,21 +243,21 @@ ORDER BY APELIDO ASC, RAZAOSOCIAL ASC, MARCA ASC, "QTDREAL" DESC]]>
 	<pageHeader>
 		<band height="68" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="555" height="34"/>
+				<reportElement x="0" y="0" width="551" height="34"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="18" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Relatório - Orçado x Realizado]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="144" y="37" width="69" height="20"/>
+				<reportElement x="141" y="37" width="69" height="20"/>
 				<textElement verticalAlignment="Top">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Período De:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="277" y="37" width="68" height="20"/>
+				<reportElement x="274" y="37" width="68" height="20"/>
 				<textElement verticalAlignment="Top">
 					<font isBold="true"/>
 				</textElement>
@@ -267,54 +274,54 @@ ORDER BY APELIDO ASC, RAZAOSOCIAL ASC, MARCA ASC, "QTDREAL" DESC]]>
 				<imageExpression class="java.lang.String"><![CDATA[$P{PDIR_MODELO} + "Logo.bmp"]]></imageExpression>
 			</image>
 			<textField>
-				<reportElement x="508" y="15" width="14" height="15"/>
+				<reportElement x="500" y="15" width="14" height="15"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="6" isItalic="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="505" y="0" width="49" height="15"/>
+				<reportElement x="497" y="0" width="49" height="15"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="539" y="15" width="15" height="15"/>
+				<reportElement x="531" y="15" width="15" height="15"/>
 				<textElement verticalAlignment="Middle">
 					<font size="6" isItalic="true"/>
 				</textElement>
 				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="455" y="0" width="50" height="15"/>
+				<reportElement x="447" y="0" width="50" height="15"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8" isItalic="true"/>
 				</textElement>
 				<text><![CDATA[Emitido em]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="469" y="15" width="39" height="15"/>
+				<reportElement x="461" y="15" width="39" height="15"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8" isItalic="true"/>
 				</textElement>
 				<text><![CDATA[Página]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="524" y="15" width="15" height="15"/>
+				<reportElement x="516" y="15" width="15" height="15"/>
 				<textElement textAlignment="Center"/>
 				<text><![CDATA[/]]></text>
 			</staticText>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="213" y="37" width="64" height="20"/>
+				<reportElement x="210" y="37" width="64" height="20"/>
 				<textElement verticalAlignment="Top">
 					<font isBold="false"/>
 				</textElement>
 				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$P{P_DTINI}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy" isBlankWhenNull="false">
-				<reportElement x="345" y="37" width="64" height="20"/>
+				<reportElement x="342" y="37" width="64" height="20"/>
 				<textElement verticalAlignment="Top"/>
 				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$P{P_DTFIN}]]></textFieldExpression>
 			</textField>
@@ -422,25 +429,18 @@ ORDER BY APELIDO ASC, RAZAOSOCIAL ASC, MARCA ASC, "QTDREAL" DESC]]>
 		<band splitType="Stretch"/>
 	</pageFooter>
 	<summary>
-		<band height="103" splitType="Stretch">
+		<band height="138" splitType="Stretch">
 			<subreport>
-				<reportElement key="Acomp_Meta_Vend" x="0" y="31" width="213" height="72"/>
-				<subreportParameter name="PDIR_MODELO"/>
-				<subreportParameter name="P_CODPARC"/>
-				<subreportParameter name="P_CODVEND"/>
-				<subreportParameter name="P_DTINI"/>
-				<subreportParameter name="P_DTFIN"/>
-				<subreportParameter name="P_CODMETA"/>
-				<subreportParameter name="P_NTEMMETA"/>
+				<reportElement key="Acomp_Meta_Res" x="0" y="31" width="555" height="107"/>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "Acomp_Meta_Vend.jasper"]]></subreportExpression>
+				<subreportExpression class="java.lang.String"><![CDATA[$P{SUBREPORT_DIR} + "Acomp_Meta_Res.jasper"]]></subreportExpression>
 			</subreport>
 			<staticText>
-				<reportElement x="0" y="0" width="213" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<reportElement x="0" y="5" width="555" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Consolidado por Vendedor]]></text>
+				<text><![CDATA[RESUMO]]></text>
 			</staticText>
 		</band>
 	</summary>

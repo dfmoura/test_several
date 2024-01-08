@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Acomp_Meta_Vend" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
-	<property name="ireport.zoom" value="1.6105100000000012"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Acomp_Meta_Cli" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.3310000000000008"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="PDIR_MODELO" class="java.lang.String" isForPrompting="false">
@@ -38,9 +38,8 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT
-CODVEND
-, APELIDO
-
+CODPARC
+, RAZAOSOCIAL
 , SUM(QTDPREV) AS QTDPREV
 , SUM(QTDREAL) AS QTDREAL
 , SUM(QTDPREV * PRECOLT)  AS VLR_PREV
@@ -84,16 +83,15 @@ GROUP BY MET.DTREF, MET.CODVEND, VEN.APELIDO, MET.CODPARC, PAR.RAZAOSOCIAL, MET.
 
 WHERE (QTDPREV <> 0 OR QTDREAL <> 0)
 GROUP BY
-CODVEND
-, APELIDO
-
-ORDER BY APELIDO ASC, "QTDREAL" DESC]]>
+CODPARC
+, RAZAOSOCIAL
+ORDER BY RAZAOSOCIAL ASC, "QTDREAL" DESC]]>
 	</queryString>
-	<field name="CODVEND" class="java.math.BigDecimal">
-		<fieldDescription><![CDATA[Cód. Vend.]]></fieldDescription>
+	<field name="CODPARC" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Cód. Parc.]]></fieldDescription>
 	</field>
-	<field name="APELIDO" class="java.lang.String">
-		<fieldDescription><![CDATA[Vendedor]]></fieldDescription>
+	<field name="RAZAOSOCIAL" class="java.lang.String">
+		<fieldDescription><![CDATA[Parceiro]]></fieldDescription>
 	</field>
 	<field name="QTDPREV" class="java.math.BigDecimal">
 		<fieldDescription><![CDATA[Qtd. Prev.]]></fieldDescription>
@@ -137,35 +135,35 @@ ORDER BY APELIDO ASC, "QTDREAL" DESC]]>
 	<columnHeader>
 		<band height="18" splitType="Stretch">
 			<staticText>
-				<reportElement x="144" y="0" width="50" height="15"/>
+				<reportElement x="217" y="0" width="50" height="15"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Qtd. Prev.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="195" y="0" width="50" height="15"/>
+				<reportElement x="268" y="0" width="50" height="15"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Qtd. Real]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="245" y="0" width="50" height="15"/>
+				<reportElement x="318" y="0" width="50" height="15"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Vlr. Prev.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="295" y="0" width="50" height="15"/>
+				<reportElement x="368" y="0" width="50" height="15"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Vlr. Real]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="345" y="0" width="35" height="15"/>
+				<reportElement x="418" y="0" width="35" height="15"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
@@ -175,71 +173,71 @@ ORDER BY APELIDO ASC, "QTDREAL" DESC]]>
 				<reportElement x="0" y="16" width="550" height="1"/>
 			</line>
 			<staticText>
-				<reportElement x="2" y="0" width="25" height="15"/>
+				<reportElement x="2" y="0" width="36" height="15"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Cód.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="27" y="0" width="72" height="15"/>
+				<reportElement x="38" y="0" width="61" height="15"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Vendedor]]></text>
+				<text><![CDATA[Parceiro]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="15" splitType="Stretch">
 			<textField pattern="#,##0.00">
-				<reportElement x="144" y="0" width="50" height="15"/>
+				<reportElement x="217" y="0" width="50" height="15"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{QTDPREV}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="195" y="0" width="50" height="15"/>
+				<reportElement x="268" y="0" width="50" height="15"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{QTDREAL}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="245" y="0" width="50" height="15"/>
+				<reportElement x="318" y="0" width="50" height="15"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{VLR_PREV}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="295" y="0" width="50" height="15"/>
+				<reportElement x="368" y="0" width="50" height="15"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{VLR_REAL}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="false">
-				<reportElement x="345" y="0" width="35" height="15"/>
+				<reportElement x="418" y="0" width="35" height="15"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{PERC}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="2" y="0" width="25" height="15"/>
+				<reportElement x="2" y="0" width="36" height="15"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{CODVEND}]]></textFieldExpression>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{CODPARC}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="27" y="0" width="116" height="15"/>
+				<reportElement x="38" y="0" width="178" height="15"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{APELIDO}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{RAZAOSOCIAL}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -255,35 +253,35 @@ ORDER BY APELIDO ASC, "QTDREAL" DESC]]>
 				<reportElement x="0" y="2" width="550" height="1"/>
 			</line>
 			<textField pattern="#,##0.00" isBlankWhenNull="false">
-				<reportElement x="144" y="4" width="50" height="15"/>
+				<reportElement x="217" y="4" width="50" height="15"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{SQTDPREV}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="false">
-				<reportElement x="195" y="4" width="50" height="15"/>
+				<reportElement x="268" y="4" width="50" height="15"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{SQTDREAL}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="245" y="4" width="50" height="15"/>
+				<reportElement x="318" y="4" width="50" height="15"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{SVLRPREV}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="295" y="4" width="50" height="15"/>
+				<reportElement x="368" y="4" width="50" height="15"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{SVLRREAL}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="99" y="4" width="44" height="15"/>
+				<reportElement x="172" y="4" width="44" height="15"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
